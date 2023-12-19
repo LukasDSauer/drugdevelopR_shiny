@@ -1,6 +1,7 @@
 # drugdevelopR: Utility-based optimal phase II/III drug development planning.
 
-The drugdevelopR R shiny applications enable you to plan phase II/III drug
+The drugdevelopR [R Shiny
+applications](https://web.imbi.uni-heidelberg.de/drugdevelopR/) enable you to plan phase II/III drug
 development programs with optimal sample size allocation and go/no-go
 decision rules. It has a graphic user interface and thus makes it accessible for
 users without prior knowledge of R. The assumed true treatment effects are modelled fixed. 
