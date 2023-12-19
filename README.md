@@ -3,7 +3,7 @@
 The drugdevelopR [R Shiny
 applications](https://web.imbi.uni-heidelberg.de/drugdevelopR/) enable you to plan phase II/III drug
 development programs with optimal sample size allocation and go/no-go
-decision rules. It has a graphic user interface and thus makes it accessible for
+decision rules. They have graphic user interfaces and thus makes it accessible for
 users without prior knowledge of R. The assumed true treatment effects are modelled fixed. 
 The corresponding [package](https://github.com/Sterniii3/drugdevelopR) 
 allows the usage of prior distributions and more functionality, while faster computing is made possible by
