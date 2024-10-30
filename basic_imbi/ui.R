@@ -173,7 +173,7 @@ shinyUI(
    selectInput("Plot2", 
                label = h3("Plot optimization region?"),
       choices = list("No" = 0,"Yes" = 1),
-      selected = 0),
+      selected = 1),
    actionButton("go2", "Go")),
 
    conditionalPanel("input.Select==3",
@@ -246,7 +246,7 @@ shinyUI(
    selectInput("Plot3", 
                label = h3("Plot optimization region?"),
             choices = list("No" = 0, "Yes" = 1),
-            selected = 0),
+            selected = 1),
    actionButton("go3", "Go")),
    
    tags$head(tags$style("#plot{height:100vh !important;}"))),
