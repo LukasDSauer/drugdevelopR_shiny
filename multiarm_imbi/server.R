@@ -21,9 +21,9 @@ library("plotly")
 # 2. Strategy: All promising treatments go to phase III
 # -> Phase III is 2 or 3 arm trial (1:1 or 1:1:1 sample size allocatiob)
 
-mainPath <- "/opt/shiny-server/samplesizr/multiarm/"
+# mainPath <- "/opt/shiny-server/samplesizr/multiarm/"
 
-#mainPath <- ""
+mainPath <- "./"
 
 
 # probability to go to phase III
@@ -658,9 +658,9 @@ shinyServer(function(input, output,session) {
             
             }else{DF = NULL}
          
-         DF <- rbind(DF,data.frame(Strategy=format(strategy,digits=0),u=Eud,HR1=exp(-theta1),HR2=exp(-theta2),ec=ec,
-                                   HRgo=hrgo[J],n2=format(n2tot,digits=0),
-                                   n3=format(n3tot,digits=0),n=format(ntot,digits=0),N=format(Nc,digits=0),
+         DF <- rbind(DF,data.frame(Strategy=format(strategy, digits = 2),u=Eud,HR1=exp(-theta1),HR2=exp(-theta2),ec=ec,
+                                   HRgo=hrgo[J],n2=format(n2tot, digits = 2),
+                                   n3=format(n3tot, digits = 2),n=format(ntot, digits = 2),N=format(Nc, digits = 2),
                                    pgo=pg,sProg=prob,Sp2=prob2,Sp3=prob3,K2=k2,K3=k3,
                                    alpha=format(alpha,digits=3),beta=beta,
                                    c02=c02,c03=c03,c2=c2,c3=c3,b1=b1,b2=b2,b3=b3))

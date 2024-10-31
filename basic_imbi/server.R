@@ -6,195 +6,11 @@ library("doParallel")
 library("parallel")
 library("cubature")
 library("plotly")
+library("tidyr")
 library("drugdevelopR")
 
 #mainPath <- "/opt/shiny-server/samplesizr/basic/"
 mainPath <- "./results/"
-
-# Utility function
-utilityf_binary <-  function(RRgo,
-                             n2,
-                             alpha,
-                             beta,
-                             p0,
-                             p1,
-                             c2,
-                             c02,
-                             c3,
-                             c03,
-                             b1,
-                             b2,
-                             b3,
-                             K,
-                             steps1,
-                             steps2,
-                             stepm1,
-                             stepm2,
-                             stepl1,
-                             stepl2) {
-  pg    <-  pgof_binary(
-    RRgo = RRgo,
-    n2 = n2,
-    p0 = p0,
-    p1 = p1
-  )
-  n3    <-  En3f_binary(
-    RRgo = RRgo,
-    n2 = n2,
-    alpha = alpha,
-    beta = beta,
-    p0 = p0,
-    p1 = p1
-  )
-  
-  # round up to next even natural number
-  if (round(n3 / 2) != n3 / 2) {
-    n3 = n3 + 1
-  }
-  
-  K2    <-  c02 + c2 * n2       #cost phase II
-  K3    <-  c03 * pg + c3 * n3  #cost phase III
-  
-  if (K2 + K3 > K) {
-    return(c(
-      -9999,
-      -9999,
-      -9999,
-      -9999,
-      -9999,-9999,
-      -9999,
-      -9999,
-      -9999,
-      -9999
-    ))
-  } else{
-    prob1 <-  EPsProgf_binary(
-      RRgo = RRgo,
-      n2 = n2,
-      alpha = alpha,
-      beta = beta,
-      p0 = p0,
-      p1 = p1,
-      step1 = steps1,
-      step2 =  steps2
-    )
-    prob2 <-  EPsProgf_binary(
-      RRgo = RRgo,
-      n2 = n2,
-      alpha = alpha,
-      beta = beta,
-      p0 = p0,
-      p1 = p1,
-      step1 =  stepm1,
-      step2 =  stepm2
-    )
-    prob3 <-  EPsProgf_binary(
-      RRgo = RRgo,
-      n2 = n2,
-      alpha = alpha,
-      beta = beta,
-      p0 = p0,
-      p1 = p1,
-      step1 =  stepl1,
-      step2 = stepl2
-    )
-    
-    G     <-  b1 * prob1 + b2 * prob2 + b3 * prob3 #gain
-    
-    EU    <- -K2 - K3 + G
-    SP    <-  prob1 + prob2 + prob3
-    
-    return(c(EU, n2, n3, SP, pg, K2, K3, prob1, prob2, prob3, n2, n3))
-  }
-}
-
-
-# Utility function
-utilityf_normal <-  function(kappa,
-                             n2,
-                             alpha,
-                             beta,
-                             Delta,
-                             c2,
-                             c02,
-                             c3,
-                             c03,
-                             b1,
-                             b2,
-                             b3,
-                             K,
-                             steps1,
-                             steps2,
-                             stepm1,
-                             stepm2,
-                             stepl1,
-                             stepl2) {
-  pg    <-  pgof_normal(kappa = kappa,
-                        n2 = n2,
-                        Delta = Delta)
-  n3    <-  En3f_normal(
-    kappa = kappa,
-    n2 = n2,
-    alpha = alpha,
-    beta = beta,
-    Delta = Delta
-  )
-  
-  if (round(n3 / 2) != n3 / 2) {
-    n3 = n3 + 1
-  }
-  
-  K2    <-  c02 + c2 * n2       #cost phase II
-  K3    <-  c03 * pg + c3 * n3  #cost phase III
-  
-  if (K2 + K3 > K) {
-    return(c(
-      -9999,
-      -9999,
-      -9999,
-      -9999,
-      -9999,-9999,
-      -9999,
-      -9999,
-      -9999,
-      -9999
-    ))
-  } else{
-    prob1 <-  EPsProgf_normal(
-      kappa = kappa,
-      n2 = n2,
-      alpha = alpha,
-      beta = beta,
-      Delta = Delta,
-      step1 = steps1,
-      step2 =  steps2
-    )
-    prob2 <-  EPsProgf_normal(
-      kappa = kappa,
-      n2 = n2,
-      alpha = alpha,
-      beta = beta,
-      Delta = Delta,
-      step1 =  stepm1,
-      step2 =  stepm2
-    )
-    prob3 <-  EPsProgf_normal(
-      kappa = kappa,
-      n2 = n2,
-      alpha = alpha,
-      beta = beta,
-      Delta = Delta,
-      step1 =  stepl1,
-      step2 = stepl2
-    )
-    
-    G     <-  b1 * prob1 + b2 * prob2 + b3 * prob3 #gain
-    EU    <- -K2 - K3 + G
-    SP    <-  prob1 + prob2 + prob3
-    
-    return(c(EU, n2, n3, SP, pg, K2, K3, prob1, prob2, prob3, n2, n3))
-  }
-}
 
 shinyServer(function(input, output, session) {
   output$table <- renderTable({
@@ -482,34 +298,40 @@ shinyServer(function(input, output, session) {
     }
     if (Plot == 1) {
       load(file = paste0(mainPath, "optimizationresults.RData"))
-      trace <- attr(DF, "trace")
+      
       if (Select == 1) {
-        x <- trace["hrgo", ]
-        y <- trace["d2", ]
+        xid <- "hrgo"
+        yid <- "d2"
         xlab <- list(title = "HRgo")
         ylab <- list(title = "d2")
       } else {
         if (Select == 2) {
-          x <- trace["rrgo", ]
-          y <- trace["n2", ]
+          xid <- "rrgo"
+          yid <- "n2"
           xlab <- list(title = "RRgo")
           ylab <- list(title = "n2")
         } else {
-          x <- trace["kappa", ]
-          y <- trace["n2", ]
+          xid <- "kappa"
+          yid <- "n2"
           xlab <- list(title = "kappa")
           ylab <- list(title = "n2")
         }
       }
-      z <- trace["ufkt", ]
+      trace <- attr(DF, "trace")
+      zid <- "ufkt"
+      zmat <- t(trace[c(xid, yid, zid), ]) %>% 
+        as.data.frame() %>% 
+        pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
+      x <- zmat[[xid]]
+      y <- as.numeric(colnames(zmat)[-1])
+      zmat <- as.matrix(select(zmat, -any_of(xid)))
       zlab <- list(title = "expected utility")
       collab <- zlab
       plot_ly(
         x = x,
         y = y,
-        z = z,
-        intensity = z,
-        type = "mesh3d"
+        z = zmat,
+        type = "surface"
       ) %>%
         layout(
           title =
@@ -517,8 +339,7 @@ shinyServer(function(input, output, session) {
           scene = list(
             xaxis = xlab,
             yaxis = ylab,
-            zaxis = zlab,
-            intensity = zlab
+            zaxis = zlab
           )
         ) %>% 
         return(.)
