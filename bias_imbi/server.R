@@ -9,9 +9,9 @@ library("plotly")
 
 
 
-mainPath <- "/opt/shiny-server/samplesizr/bias/"
+#mainPath <- "/opt/shiny-server/samplesizr/bias/"
 
-#mainPath <- ""
+mainPath <- ""
 
 # w; weight for true underlying fixed effect
 # y: hat_theta_2; estimator in phase II

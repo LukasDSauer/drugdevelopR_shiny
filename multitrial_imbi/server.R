@@ -21,9 +21,9 @@ library("plotly")
 # 2. Strategy: All promising treatments go to phase III
 # -> Phase III is 2 or 3 arm trial (1:1 or 1:1:1 sample size allocatiob)
 
-mainPath <- "/opt/shiny-server/samplesizr/multitrial/"
+#mainPath <- "/opt/shiny-server/samplesizr/multitrial/"
 
-#mainPath <- ""
+mainPath <- ""
 
 
 ######################################
