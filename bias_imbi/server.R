@@ -423,10 +423,10 @@ shinyServer(function(input, output,session) {
          k3    <- K3fkt[I,J]
 
          DF0 <- rbind(DF0,data.frame(Method=meth, u=Eud, HR=exp(-theta),
-                                   Adj = adj,HRgo=hrgo[J],d2=format(d2tot,digits=0),
-                                   d3=format(d3tot,digits=0),d=format(dtot,digits=0),
-                                   n2=format(d2tot/p2,digits=0),
-                                   n3=format(d3tot/p3,digits=0),n=format(d2tot/p2+d3tot/p3,digits=0),
+                                   Adj = adj,HRgo=hrgo[J],d2=format(d2tot,digits = 2),
+                                   d3=format(d3tot,digits = 2),d=format(dtot,digits = 2),
+                                   n2=format(d2tot/p2,digits = 2),
+                                   n3=format(d3tot/p3,digits = 2),n=format(d2tot/p2+d3tot/p3,digits = 2),
                                    pgo=pg,sProg=prob,Sprog1=prob1,Sprog2=prob2,Sprog3=prob3,K2=k2,K3=k3,
                                    alpha=format(alpha,digits=3),beta=beta,p2=p2,p3=p3,
                                    c02=c02,c03=c03,c2=c2,c3=c3,b1=b1,b2=b2,b3=b3))

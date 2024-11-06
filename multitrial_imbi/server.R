@@ -1131,11 +1131,11 @@ shinyServer(function(input, output,session) {
          
       
          
-         DF <- rbind(DF,data.frame(Strategy=format(strategy,digits=0),Case=case,u=Eud,HR=exp(-theta),
-                                   HRgo=hrgo[J],d2=format(d2tot,digits=0),
-                                   d3=format(d3tot,digits=0),d=format(d2tot+d3tot*as.numeric(strategy),digits=0),
-                                   n2= format(d2tot/p2,digits=0),n3= format(d3tot/p3,digits=0),
-                                   n=format(d2tot/p2+d3tot/p3*as.numeric(strategy),digits=0),
+         DF <- rbind(DF,data.frame(Strategy=format(strategy,digits = 2),Case=case,u=Eud,HR=exp(-theta),
+                                   HRgo=hrgo[J],d2=format(d2tot,digits = 2),
+                                   d3=format(d3tot,digits = 2),d=format(d2tot+d3tot*as.numeric(strategy),digits = 2),
+                                   n2= format(d2tot/p2,digits = 2),n3= format(d3tot/p3,digits = 2),
+                                   n=format(d2tot/p2+d3tot/p3*as.numeric(strategy),digits = 2),
                                    pgo=pg,sProg=prob,sProg1=prob1,sProg2=prob2,sProg3=prob3,K2=k2,K3=k3,
                                    xi2=p2,xi3=p3,alpha=format(alpha,digits=3),beta=beta,
                                    c02=c02,c03=c03,c2=c2,c3=c3,b1=b1,b2=b2,b3=b3))
