@@ -275,7 +275,8 @@ shinyServer(function(input, output, session) {
     } else {
       DF = NULL
     }
-    DF <- result
+    DF <- rbind(DF, result)
+    save(result, file = paste0(mainPath, "optimizationresult_last.RData"))
     save(DF, file = paste0(mainPath, "optimizationresults.RData"))
     # Remove unnecessary columns
     DF_out <- DF[, !names(DF) %in% c("skipII", "N", "S", "gamma")]
@@ -297,7 +298,7 @@ shinyServer(function(input, output, session) {
       Plot = input$Plot3
     }
     if (Plot == 1) {
-      load(file = paste0(mainPath, "optimizationresults.RData"))
+      load(file = paste0(mainPath, "optimizationresult_last.RData"))
       
       if (Select == 1) {
         xid <- "hrgo"
@@ -317,7 +318,7 @@ shinyServer(function(input, output, session) {
           ylab <- list(title = "n2")
         }
       }
-      trace <- attr(DF, "trace")
+      trace <- attr(result, "trace")
       zid <- "ufkt"
       zmat <- t(trace[c(xid, yid, zid), ]) %>% 
         as.data.frame() %>% 
@@ -325,6 +326,7 @@ shinyServer(function(input, output, session) {
       x <- zmat[[xid]]
       y <- as.numeric(colnames(zmat)[-1])
       zmat <- as.matrix(select(zmat, -any_of(xid)))
+      save(zmat, file = "results/test.RData")
       zlab <- list(title = "expected utility")
       collab <- zlab
       plot_ly(
