@@ -325,13 +325,16 @@ shinyServer(function(input, output, session) {
         pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
       x <- zmat[[xid]]
       y <- as.numeric(colnames(zmat)[-1])
-      zmat <- as.matrix(select(zmat, -any_of(xid)))
+      xmat <- matrix(x, nrow = length(y), ncol = length(x), byrow=TRUE)
+      ymat <- matrix(y, nrow = length(y), ncol = length(x))
+      zmat <- t(as.matrix(select(zmat, -any_of(xid))))
+      rownames(zmat) <- NULL
       save(zmat, file = "results/test.RData")
       zlab <- list(title = "expected utility")
       collab <- zlab
       plot_ly(
-        x = x,
-        y = y,
+        x = xmat,
+        y = ymat,
         z = zmat,
         type = "surface"
       ) %>%
