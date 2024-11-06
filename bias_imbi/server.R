@@ -60,11 +60,6 @@ shinyServer(function(input, output, session) {
     input$go
     refresh = isolate(input$refresh)
     
-    if (refresh == 1) {
-      DF = NULL
-    } else {
-      load(file = paste0(mainPath, "optimizationresults.RData"))
-    }
     
     if (Select == 1) {
       meth <- "multiplicative"
@@ -72,7 +67,7 @@ shinyServer(function(input, output, session) {
       y = function() {
         result <- optimal_bias(
           w = NULL,
-          hr1 = HRgo,
+          hr1 = HR,
           hr2 = NULL,
           id1 = NULL,
           id2 = NULL,
@@ -156,6 +151,7 @@ shinyServer(function(input, output, session) {
           fixed = TRUE,
           num_cl = 1
         )
+        return(result)
       }
     }
     
@@ -202,13 +198,13 @@ shinyServer(function(input, output, session) {
           fixed = TRUE,
           num_cl = 1
         )
+        return(result)
       }
     }
-    DF0 = NULL
     
     result <- progressr::withProgressShiny({
       y()
-    }, message = "Optimization progress", detail = paste("for", meth_lab, "method"))
+    }, message = "Optimization progress", detail = paste("for", meth_lab))
     
     
     if (refresh == 0) {
@@ -216,9 +212,11 @@ shinyServer(function(input, output, session) {
     } else {
       DF = NULL
     }
-    DF <- result
+    DF <- rbind(DF, result)
+    save(result, file = paste0(mainPath, "optimizationresult_last.RData"))
     save(DF, file = paste0(mainPath, "optimizationresults.RData"))
     # Remove unnecessary columns
+    DF_out <- DF
     # DF_out <- DF[, !names(DF) %in% c("skipII", "N", "S", "gamma")]
     return(DF_out)
   })
@@ -229,6 +227,7 @@ shinyServer(function(input, output, session) {
     input$go
     Plot = isolate(input$Plot)
     if (Plot == 1) {
+      load(file = paste0(mainPath, "optimizationresult_last.RData"))
       if (Select == 1) {
         load(file = paste0(mainPath, "ufkt1.RData"))
         load(file = paste0(mainPath, "d2fkt1.RData"))

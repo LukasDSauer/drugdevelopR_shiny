@@ -329,7 +329,6 @@ shinyServer(function(input, output, session) {
       ymat <- matrix(y, nrow = length(y), ncol = length(x))
       zmat <- t(as.matrix(select(zmat, -any_of(xid))))
       rownames(zmat) <- NULL
-      save(zmat, file = "results/test.RData")
       zlab <- list(title = "expected utility")
       collab <- zlab
       plot_ly(
