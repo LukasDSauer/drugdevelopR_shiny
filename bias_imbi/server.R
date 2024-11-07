@@ -6,7 +6,8 @@ library("doParallel")
 library("parallel")
 library("cubature")
 library("plotly")
-
+library("tidyr")
+library("drugdevelopR")
 
 
 # mainPath <- "/opt/shiny-server/samplesizr/bias/"
@@ -228,50 +229,54 @@ shinyServer(function(input, output, session) {
     Plot = isolate(input$Plot)
     if (Plot == 1) {
       load(file = paste0(mainPath, "optimizationresult_last.RData"))
+      xid <- "hrgo"
+      yid <- "d2"
+      xlab <- list(title = "HRgo")
+      ylab <- list(title = "d2")
+      trace <- attr(result, "trace")
+      zid <- "ufkt"
+      zlab <- list(title = "expected utility")
       if (Select == 1) {
-        load(file = paste0(mainPath, "ufkt1.RData"))
-        load(file = paste0(mainPath, "d2fkt1.RData"))
-        load(file = paste0(mainPath, "HRgofkt1.RData"))
         showplot = "multiplicatively"
       }
       if (Select == 2) {
-        load(file = paste0(mainPath, "ufkt2.RData"))
-        load(file = paste0(mainPath, "d2fkt2.RData"))
-        load(file = paste0(mainPath, "HRgofkt2.RData"))
         showplot = "additively"
       }
       if (Select == 3) {
-        load(file = paste0(mainPath, "ufkt1.RData"))
-        ufkt1  = ufkt
-        load(file = paste0(mainPath, "ufkt2.RData"))
-        ufkt2  = ufkt
-        
-        if (max(ufkt1) > max(ufkt2)) {
-          load(file = paste0(mainPath, "ufkt1.RData"))
-          load(file = paste0(mainPath, "d2fkt1.RData"))
-          load(file = paste0(mainPath, "HRgofkt1.RData"))
-          showplot = "multiplicatively"
+ 
+        # Show only the plot with the larger utility
+        if (res[which(res$Method == "multipl."),"u"] > 
+            res[which(res$Method == "add."),"u"]) {
+          trace <- trace[,which(trace["strat",]=="multipl.")]
+          showplot <- "multiplicatively"
         } else{
-          load(file = paste0(mainPath, "ufkt2.RData"))
-          load(file = paste0(mainPath, "d2fkt2.RData"))
-          load(file = paste0(mainPath, "HRgofkt2.RData"))
-          showplot = "additively"
+          trace <- trace[,which(trace["strat",]=="add.")]
+          showplot <- "additively"
         }
         
       }
+      zmat <- t(trace[c(xid, yid, zid), ]) %>% 
+        as.data.frame() %>% 
+        pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
+      x <- zmat[[xid]]
+      y <- as.numeric(colnames(zmat)[-1])
+      xmat <- matrix(x, nrow = length(y), ncol = length(x), byrow=TRUE)
+      ymat <- matrix(y, nrow = length(y), ncol = length(x))
+      zmat <- t(as.matrix(select(zmat, -any_of(xid))))
+      rownames(zmat) <- NULL
       plot_ly(
-        x = HRgofkt,
-        y = d2fkt,
-        z = ufkt,
+        x = xmat,
+        y = ymat,
+        z = zmat,
         type = "surface"
       )  %>%
         layout(
           title =
             paste0("Optimization region of ", showplot, " adjusted setting"),
           scene = list(
-            xaxis = list(title = "HRgo"),
-            yaxis = list(title = "d2"),
-            zaxis = list(title = "expected utility")
+            xaxis = xlab,
+            yaxis = ylab,
+            zaxis = zlab
           )
         )
     }

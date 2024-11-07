@@ -320,6 +320,7 @@ shinyServer(function(input, output, session) {
       }
       trace <- attr(result, "trace")
       zid <- "ufkt"
+      zlab <- list(title = "expected utility")
       zmat <- t(trace[c(xid, yid, zid), ]) %>% 
         as.data.frame() %>% 
         pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
@@ -329,8 +330,6 @@ shinyServer(function(input, output, session) {
       ymat <- matrix(y, nrow = length(y), ncol = length(x))
       zmat <- t(as.matrix(select(zmat, -any_of(xid))))
       rownames(zmat) <- NULL
-      zlab <- list(title = "expected utility")
-      collab <- zlab
       plot_ly(
         x = xmat,
         y = ymat,
