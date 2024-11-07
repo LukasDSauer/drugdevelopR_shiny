@@ -213,6 +213,7 @@ shinyServer(function(input, output, session) {
     } else {
       DF = NULL
     }
+    
     DF <- rbind(DF, result)
     save(result, file = paste0(mainPath, "optimizationresult_last.RData"))
     save(DF, file = paste0(mainPath, "optimizationresults.RData"))
@@ -227,6 +228,7 @@ shinyServer(function(input, output, session) {
     Select = isolate(input$Select)
     input$go
     Plot = isolate(input$Plot)
+    browser()
     if (Plot == 1) {
       load(file = paste0(mainPath, "optimizationresult_last.RData"))
       xid <- "hrgo"
@@ -238,23 +240,29 @@ shinyServer(function(input, output, session) {
       zlab <- list(title = "expected utility")
       if (Select == 1) {
         showplot = "multiplicatively"
+        adj <- result[,"Adj"]
       }
       if (Select == 2) {
         showplot = "additively"
+        adj <- result[,"Adj"]
       }
       if (Select == 3) {
  
         # Show only the plot with the larger utility
-        if (res[which(res$Method == "multipl."),"u"] > 
-            res[which(res$Method == "add."),"u"]) {
+        if (result[which(result$Method == "multipl."),"u"] > 
+            result[which(result$Method == "add."),"u"]) {
           trace <- trace[,which(trace["strat",]=="multipl.")]
           showplot <- "multiplicatively"
+          adj <- result[which(result$Method == "multipl."),"Adj"]
         } else{
           trace <- trace[,which(trace["strat",]=="add.")]
           showplot <- "additively"
+          adj <- result[which(result$Method == "add."),"Adj"]
         }
         
       }
+      # Only select the best adjustment value
+      trace <- trace[,,which(trace["adj",]==adj)]
       zmat <- t(trace[c(xid, yid, zid), ]) %>% 
         as.data.frame() %>% 
         pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
