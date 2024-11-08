@@ -262,7 +262,7 @@ shinyServer(function(input, output, session) {
         
       }
       # Only select the best adjustment value
-      trace <- trace[,,which(trace["adj",]==adj)]
+      trace <- trace[, which(trace["adj",]==adj)]
       zmat <- t(trace[c(xid, yid, zid), ]) %>% 
         as.data.frame() %>% 
         pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
