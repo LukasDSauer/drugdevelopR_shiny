@@ -113,9 +113,10 @@ shinyServer(function(input, output, session) {
       meth <- "additive"
       meth_lab <- paste(meth, "method")
       y = function() {
+        browser()
         result <- optimal_bias(
           w = NULL,
-          hr1 = HRgo,
+          hr1 = HR,
           hr2 = NULL,
           id1 = NULL,
           id2 = NULL,
@@ -162,7 +163,7 @@ shinyServer(function(input, output, session) {
       y = function() {
         result <- optimal_bias(
           w = NULL,
-          hr1 = HRgo,
+          hr1 = HR,
           hr2 = NULL,
           id1 = NULL,
           id2 = NULL,
@@ -219,7 +220,7 @@ shinyServer(function(input, output, session) {
     save(DF, file = paste0(mainPath, "optimizationresults.RData"))
     # Remove unnecessary columns
     DF_out <- DF
-    # DF_out <- DF[, !names(DF) %in% c("skipII", "N", "S", "gamma")]
+    DF_out <- DF[, !names(DF) %in% c("K", "N", "S")]
     return(DF_out)
   })
   
@@ -262,15 +263,18 @@ shinyServer(function(input, output, session) {
       }
       # Only select the best adjustment value
       trace <- trace[, which(trace["adj",]==adj)]
+      
       zmat <- t(trace[c(xid, yid, zid), ]) %>% 
         as.data.frame() %>% 
-        pivot_wider(names_from = all_of(yid), values_from = all_of(zid))
-      x <- zmat[[xid]]
+        pivot_wider(names_from = all_of(yid), values_from = all_of(zid)) %>% 
+        mutate_all(as.numeric)
+      x <- as.numeric(zmat[[xid]])
       y <- as.numeric(colnames(zmat)[-1])
       xmat <- matrix(x, nrow = length(y), ncol = length(x), byrow=TRUE)
       ymat <- matrix(y, nrow = length(y), ncol = length(x))
       zmat <- t(as.matrix(select(zmat, -any_of(xid))))
       rownames(zmat) <- NULL
+      
       plot_ly(
         x = xmat,
         y = ymat,
@@ -288,6 +292,4 @@ shinyServer(function(input, output, session) {
         )
     }
   })
-  
-  
 })
