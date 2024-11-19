@@ -228,7 +228,6 @@ shinyServer(function(input, output, session) {
     Select = isolate(input$Select)
     input$go
     Plot = isolate(input$Plot)
-    browser()
     if (Plot == 1) {
       load(file = paste0(mainPath, "optimizationresult_last.RData"))
       xid <- "hrgo"
