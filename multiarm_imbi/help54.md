@@ -21,5 +21,5 @@ If the server is busy, you may need to double click the "Go"-button in order to 
 #### Maintainer
 Stella Erdmann, Institute of Medical Biometry, University of Heidelberg, email: erdmann@imbi.uni-heidelberg.de.
 
-Beta version 0.5
+Version 1.0
 
