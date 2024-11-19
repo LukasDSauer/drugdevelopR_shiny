@@ -6,6 +6,8 @@ library("doParallel")
 library("parallel")
 library("cubature")
 library("plotly")
+library("tidyr")
+library("drugdevelopR")
 
 ###############################################
 # Potentially more than two arms in phase III #
@@ -66,12 +68,6 @@ shinyServer(function(input, output,session) {
          refresh = isolate(input$refresh)
          input$go
          Nc = isolate(input$Nc)
-         
-         theta1   = -log(HR1)
-         theta2   = -log(HR2)
-         
-         N2seq = seq(from = N2[1], to = N2[2], by = stepN2)
-         hrgo = seq(from = HRgo[1], to = HRgo[2], by = stepHRgo)
          
          if(Select==1){
            strategy = 1
