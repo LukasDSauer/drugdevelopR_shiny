@@ -10,9 +10,8 @@ library("tidyr")
 library("drugdevelopR")
 
 
-# mainPath <- "/opt/shiny-server/samplesizr/bias/"
-
-mainPath <- "./results/"
+mainPath <- "/opt/shiny-server/samplesizr/bias/"
+# mainPath <- "./results/"
 
 shinyServer(function(input, output, session) {
   output$table <- renderTable({

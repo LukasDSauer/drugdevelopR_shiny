@@ -20,9 +20,8 @@ library("drugdevelopR")
 # 2. Strategy: All promising treatments go to phase III
 # -> Phase III is 2 or 3 arm trial (1:1 or 1:1:1 sample size allocation)
 
-# mainPath <- "/opt/shiny-server/samplesizr/multiarm/"
-
-mainPath <- "./results/"
+mainPath <- "/opt/shiny-server/samplesizr/multiarm/"
+# mainPath <- "./results/"
 
 shinyServer(function(input, output,session) {
    
