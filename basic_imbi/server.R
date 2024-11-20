@@ -9,8 +9,8 @@ library("plotly")
 library("tidyr")
 library("drugdevelopR")
 
-mainPath <- "/opt/shiny-server/samplesizr/basic/"
-# mainPath <- "./results/"
+# mainPath <- "/opt/shiny-server/samplesizr/basic/"
+mainPath <- "./results/"
 
 shinyServer(function(input, output, session) {
   output$table <- renderTable({
