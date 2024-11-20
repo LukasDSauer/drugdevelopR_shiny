@@ -14,7 +14,7 @@
 * probability of a successful program (sProg)
 * probability of a successful program with small treatment effect (sProg1)
 * probability of a successful program with medium treatment effect (sProg2)
-* probability of a successful program with large treatment effect(sProg3)
+* probability of a successful program with large treatment effect (sProg3)
 * costs for phase II (K2)
 * costs for phase III (K3)
 

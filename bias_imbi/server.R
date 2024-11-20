@@ -8,6 +8,7 @@ library("cubature")
 library("plotly")
 library("tidyr")
 library("drugdevelopR")
+library("dplyr")
 
 
 # mainPath <- "/opt/shiny-server/samplesizr/bias/"
@@ -112,7 +113,6 @@ shinyServer(function(input, output, session) {
       meth <- "additive"
       meth_lab <- paste(meth, "method")
       y = function() {
-        browser()
         result <- optimal_bias(
           w = NULL,
           hr1 = HR,
@@ -229,7 +229,14 @@ shinyServer(function(input, output, session) {
     input$go
     Plot = isolate(input$Plot)
     if (Plot == 1) {
-      load(file = paste0(mainPath, "optimizationresult_last.RData"))
+      browser()
+      fileData  <- reactiveFileReader(1000, 
+                         session = session, 
+                         filePath = paste0(mainPath, "optimizationresult_last.RData"), 
+                         readFunc = load)()
+      result <- renderTable({
+        fileData()
+      })
       xid <- "hrgo"
       yid <- "d2"
       xlab <- list(title = "HRgo")
