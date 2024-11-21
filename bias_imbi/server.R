@@ -10,12 +10,8 @@ library("tidyr")
 library("drugdevelopR")
 library("dplyr")
 
-
-# mainPath <- "/opt/shiny-server/samplesizr/bias/"
-mainPath <- "./results/"
-
-shinyServer(function(input, output, session) {
-  output$table <- renderTable({
+server <- function(input, output, session) {
+  getResult <- reactive({
     input$go
     Select = isolate(input$Select)
     input$go
@@ -202,21 +198,25 @@ shinyServer(function(input, output, session) {
         return(result)
       }
     }
-    
     result <- progressr::withProgressShiny({
       y()
     }, message = "Optimization progress", detail = paste("for", meth_lab))
-    
-    
+    session$userData$result <- result
+    return(result)
+  })
+  
+  output$table <- renderTable({
+    input$go
+    refresh = isolate(input$refresh)
+    result <- getResult()
     if (refresh == 0) {
-      load(file = paste0(mainPath, "optimizationresults.RData"))
+      DF <- session$userData$DF
     } else {
-      DF = NULL
+      DF <- NULL
     }
     
     DF <- rbind(DF, result)
-    save(result, file = paste0(mainPath, "optimizationresult_last.RData"))
-    save(DF, file = paste0(mainPath, "optimizationresults.RData"))
+    session$userData$DF <- DF
     # Remove unnecessary columns
     DF_out <- DF
     DF_out <- DF[, !names(DF) %in% c("K", "N", "S")]
@@ -229,18 +229,11 @@ shinyServer(function(input, output, session) {
     input$go
     Plot = isolate(input$Plot)
     if (Plot == 1) {
-      browser()
-      fileData  <- reactiveFileReader(1000, 
-                         session = session, 
-                         filePath = paste0(mainPath, "optimizationresult_last.RData"), 
-                         readFunc = load)()
-      result <- renderTable({
-        fileData()
-      })
       xid <- "hrgo"
       yid <- "d2"
       xlab <- list(title = "HRgo")
       ylab <- list(title = "d2")
+      result <- getResult()
       trace <- attr(result, "trace")
       zid <- "ufkt"
       zlab <- list(title = "expected utility")
@@ -252,8 +245,8 @@ shinyServer(function(input, output, session) {
         showplot = "additively"
         adj <- result[,"Adj"]
       }
+      
       if (Select == 3) {
- 
         # Show only the plot with the larger utility
         if (result[which(result$Method == "multipl."),"u"] > 
             result[which(result$Method == "add."),"u"]) {
@@ -298,4 +291,4 @@ shinyServer(function(input, output, session) {
         )
     }
   })
-})
+}
