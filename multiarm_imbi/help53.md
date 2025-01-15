@@ -1,6 +1,6 @@
 #### Values presented in table
 * Strategy
-* maxiaml expected utility (u)
+* maximal expected utility (u)
 * drug development planning characteristics: assumed true hazard rates (HR<sub>1</sub>, HR<sub>2</sub>), control arm event rate (e<sub>c</sub>)
 * optimal threshold value for the decision rule to go to phase III (HR<sub>go</sub>)
 * optimal total sample size for phase II (n<sub>2</sub>)

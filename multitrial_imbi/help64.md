@@ -4,7 +4,7 @@
 * assumed true hazard rate (HR)
 * threshold value for the decision rule to go to phase III (HR<sub>go</sub>)
 * total number of events for phase II (d<sub>2</sub>)
-* total expected number of events for one phase III (d<sub>3</sub>)
+* total expected number of events for all phase III trials (d<sub>3</sub>)
 * total expected number of events in the program (d)
 * total sample size for phase II (n<sub>2</sub>)
 * total expected sample size for one phase III (n<sub>3</sub>)
@@ -40,4 +40,4 @@ If the server is busy, you may need to double click the "Go"-button in order to 
 #### Maintainer
 Stella Erdmann, Institute of Medical Biometry, University of Heidelberg, email: erdmann@imbi.uni-heidelberg.de.
 
-Beta version 0.5
+Version 1.0

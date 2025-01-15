@@ -37,7 +37,7 @@ shinyUI(fluidPage(
        
        
        conditionalPanel("input.Select==2|input.Select==3",
-                        sliderInput("alphaL", HTML("Multiplicative adjustment parameter &alpha;<sub>CI</sub>:"), 
+                        sliderInput("alphaL", HTML("Additive adjustment parameter &alpha;<sub>CI</sub>:"), 
                                     min = 0.025, max = 0.5, value = c(0.3,0.35), step=0.025),
        sliderInput("stepalphaL", HTML("Step size for &alpha;<sub>CI</sub>:"), 
                    min = 0.025, max = 0.1, value = 0.025, step=0.025)),
